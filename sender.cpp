@@ -2,22 +2,15 @@
 #include <cstdlib>
 #include <ctime>
 
-double generateTemperature() {
-    double minTemp = 36.0;
-    double maxTemp = 40.0;
-    return minTemp + static_cast<double>(rand()) / (static_cast<double>(RAND_MAX / (maxTemp - minTemp)));
-}
+const float MIN_TEMP = 50;
+const float MAX_TEMP = 125;
+const float MIN_PULSE_RATE = 50;
+const float MAX_PULSE_RATE = 150;
+const float MIN_SPO2 = 50;
+const float MAX_SPO2 = 100;
 
-int generatePulseRate() {
-    int minPulseRate = 60;
-    int maxPulseRate = 100;
-    return minPulseRate + rand() % (maxPulseRate - minPulseRate + 1);
-}
-
-int generateSPO2() {
-    int minSPO2 = 90;
-    int maxSPO2 = 100;
-    return minSPO2 + rand() % (maxSPO2 - minSPO2 + 1);
+float generateSensorReading(float minValue, float maxValue) {
+    return minValue + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (maxValue - minValue)));
 }
 
 int main() {
@@ -25,12 +18,10 @@ int main() {
 
     // Send fifty sets of readings
     for (int i = 0; i < 50; i++) {
-        double temperature = generateTemperature();
-        int pulseRate = generatePulseRate();
-        int spo2 = generateSPO2();
-
+        float temperature = generateSensorReading(MIN_TEMP, MAX_TEMP);
+        float pulseRate = generateSensorReading(MIN_PULSE_RATE, MAX_PULSE_RATE);
+        float spo2 = generateSensorReading(MIN_SPO2, MAX_SPO2);
         std::cout << "Temperature = " << temperature << ", Pulse Rate = " << pulseRate << ", SPO2 = " << spo2 << std::endl;
     }
-
     return 0;
 }
