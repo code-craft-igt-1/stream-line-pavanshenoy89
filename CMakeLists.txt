@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.14)
-project(bms-monitor)
+project(stream-line)
 
 # GoogleTest requires at least C++14
 set(CMAKE_CXX_STANDARD 17)
@@ -20,13 +20,13 @@ enable_testing()
 
 file(GLOB SOURCES "*.cpp")
 add_executable(
-    sender
+    test-sender
   ${SOURCES}
 )
 target_link_libraries(
-    sender
+    test-sender
   GTest::gtest_main
 )
 
 include(GoogleTest)
-gtest_discover_tests(sender)
+gtest_discover_tests(test-sender)
