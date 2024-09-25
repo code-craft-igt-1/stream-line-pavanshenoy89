@@ -24,7 +24,7 @@ add_executable(
   ${SOURCES}
 )
 target_link_libraries(
-    test-sender
+    sender
   GTest::gtest_main
 )
 
