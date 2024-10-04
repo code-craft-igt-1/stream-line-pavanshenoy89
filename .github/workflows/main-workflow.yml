@@ -9,10 +9,12 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: install coverage tool
+    - name: install coverage tool and linters
       run: |
         sudo apt-get update
         sudo apt-get install -y gcovr
+        pip install flake8 coverage
+
     - name: setup cmake
       run: sudo apt install cmake
 
@@ -20,9 +22,19 @@ jobs:
       run: |
         cmake -S . -B build
         cmake --build build
-      
+
+    - name: Check Lint with flake8
+      run: |
+        # stop the build if there are Python syntax errors or undefined names
+        flake8 *receiver.py --count --select=E9,F63,F7,F82 --show-source --statistics
+        # exit-zero treats all errors as warnings.
+        flake8 *receiver.py --count --exit-zero --max-line-length=85 --statistics
+
     - name: run
       run: build/test-sender
+
+    - name: run receiver
+      run: build/test-sender | python receiver.py
 
     - name: collect coverage
       run: gcovr --gcov-exclude=".*test.*" -r . --html --html-details -o coverage.html --print-summary
@@ -32,4 +44,17 @@ jobs:
       with:
         name: coverage
         path: ./*.html
+        retention-days: 21
+
+    - name: Run PyTests with Coverage
+      run: |
+        coverage run --branch test-receiver.py
+        coverage html
+        coverage report
+
+    - name: Upload pytest Coverage Report
+      uses: actions/upload-artifact@v3
+      with:
+        name: coverage
+        path: ./htmlcov
         retention-days: 21
